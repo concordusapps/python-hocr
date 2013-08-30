@@ -13,6 +13,7 @@ setup(
     description=meta.description,
     author='Concordus Applications',
     author_email='support@concordusapps.com',
+    url='https://github.com/concordusapps/python-hocr',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
