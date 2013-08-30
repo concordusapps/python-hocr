@@ -14,6 +14,6 @@ def parse(stream=None, filename=None):
         raise ValueError('Provide either filename or stream.')
 
     # Get all the pages that this
-    pages = tree.xpath('//*[@class="ocr_page"]')
+    pages = tree.findall('//*[@class="ocr_page"]')
 
     return [Page(x) for x in pages]
