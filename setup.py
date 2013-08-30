@@ -19,10 +19,7 @@ setup(
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Cython',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
-        'Topic :: Text Processing :: Markup :: XML'
     ],
     package_dir={'hocr': 'src/hocr'},
     packages=find_packages('src'),
