@@ -7,7 +7,7 @@ setup(
     version='0.0.0',
     author='Concordus Applications',
     author_email='support@concordusapps.com',
-    package_dir={'contracts': 'src/contracts'},
+    package_dir={'hocr': 'src/hocr'},
     packages=find_packages('src'),
     install_requires=[],
     extras_require={
