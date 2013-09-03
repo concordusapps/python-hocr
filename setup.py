@@ -8,7 +8,7 @@ from pkgutil import get_importer
 meta = get_importer('src/hocr').find_module('meta').load_module('meta')
 
 setup(
-    name='python-hocr',
+    name='hocr',
     version=meta.version,
     description=meta.description,
     author='Concordus Applications',
