@@ -3,17 +3,15 @@ from lxml import etree
 from .page import Page
 
 
-def parse(stream=None, filename=None):
-    """Parse a file like object or filename."""
+def parse(obj):
+    """Parse a HOCR stream into page elements.
 
-    if filename is not None and not stream:
-        tree = etree.parse(filename)
-    elif filename is None and stream:
-        tree = etree.parse(stream)
-    else:
-        raise ValueError('Provide either filename or stream.')
+    @param[in] obj
+        Either a file-like object or a filename of the HOCR text.
+    """
 
-    # Get all the pages that this
-    pages = tree.findall('//*[@class="ocr_page"]')
+    # Parse the HOCR xml stream.
+    tree = etree.parse(obj)
 
-    return [Page(x) for x in pages]
+    # Get all the pages and parse them into page elements.
+    return [Page(x) for x in tree.findall('//*[@class="ocr_page"]')]

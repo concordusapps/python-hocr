@@ -7,7 +7,7 @@ BASE_DIR = path.dirname(__file__)
 
 
 def parse(filename='example.html'):
-    return hocr.parse(filename=path.join(BASE_DIR, filename))
+    return hocr.parse(path.join(BASE_DIR, filename))
 
 
 def test_parse_from_stream():
@@ -15,12 +15,6 @@ def test_parse_from_stream():
         pages = hocr.parse(stream)
 
         assert len(pages) == len(parse('example.html'))
-
-
-def test_parse_fails():
-    raises(ValueError, lambda: hocr.parse())
-    raises(ValueError, lambda: hocr.parse(None))
-    raises(ValueError, lambda: hocr.parse(StringIO('ss'), filename='..'))
 
 
 def test_get_number_of_pages():

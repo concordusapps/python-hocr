@@ -3,9 +3,10 @@
 from setuptools import setup, find_packages
 from pkgutil import get_importer
 
-# Load the metadata for inclusion in the package.
+
 # Navigate, import, and retrieve the metadata of the project.
 meta = get_importer('src/hocr').find_module('meta').load_module('meta')
+
 
 setup(
     name='hocr',
@@ -25,7 +26,8 @@ setup(
     package_dir={'hocr': 'src/hocr'},
     packages=find_packages('src'),
     install_requires=[
-        'lxml >= 3.2.3, < 4.0.0'
+        'lxml >= 3.2.3, < 4.0.0',
+        'hummus'
     ],
     extras_require={
         'test': [
