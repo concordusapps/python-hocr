@@ -26,8 +26,10 @@ setup(
     package_dir={'hocr': 'src/hocr'},
     packages=find_packages('src'),
     install_requires=[
+        'six',
         'lxml >= 3.2.3, < 4.0.0',
-        'hummus >= 0.2.0'
+        'hummus >= 0.2.0',
+        'python-magic'
     ],
     extras_require={
         'test': [

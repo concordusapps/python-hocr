@@ -1,66 +1,69 @@
 # -*- coding: utf-8 -*-
-import hummus
+import six
+from hummus import Document, Font, Text, Image
 from .parser import parse
+import magic
 
 
-def overlay_document(output, source, text, page=0):
-    """Overlay a PDF document with the text from a HOCR file.
-
-    Writes the overlaid document as a PDF file to the output filename or
-    file-like object.
-
-    @param[in] source
-        Either a file-like object or a filename of the PDF document.
+def _is_document(source):
+    """Check if the source refers to a PDF document or not.
     """
 
-    # Parse the HOCR text.
-    target = parse(text)[0]
-    # print(target.bbox.right, target.bbox.bottom)
+    test = magic.from_buffer
+    if isinstance(source, six.string_types):
+        test = magic.from_file
+        source = source.encode('utf8')
 
-    # Prepare fonts.
-    arial = hummus.Font('arial')
+    elif isinstance(source, six.binary_type):
+        test = magic.from_file
 
-    # Initialize PDF document.
-    with hummus.Document(output) as document:
-
-        # Initialize a new page and begin its context.
-        with document.Page() as ctx:
-
-            # Establish the media box.
-            # ctx.media_box = hummus.Rectangle(
-            #     right=target.bbox.right, bottom=target.bbox.bottom)
-
-            # Embed the passed PDF document.
-            ctx.embed_document(source, page=page)
-
-            ctx.write_text('Tom Foolery', font=arial, size=10,
-                           a=1, b=1, c=1, d=1)
+    return test(source, mime=True) == b'application/pdf'
 
 
-
-def overlay_image(output, source, text, page=0):
-    """Overlay a JPEG image with the text from a HOCR file.
-
-    Writes the overlaid image as a PDF file to the output filename or
-    file-like object.
-
-    @param[in] source
-        Either a file-like object or a filename of the image.
-    """
-
-
-def overlay(output, source, text, page=0):
+def overlay(output, source, text, index=0):
     """Overlay a PDF document or JPEG image with the text from a HOCR file.
 
     Writes the overlaid source as a PDF file to the output filename or
     file-like object.
 
+    @param[in] source
+        Either a file-like object or a filename of the image or PDF document
+        to embed as the background.
+
     @param[in] text
         Either a file-like object or a filename of the HOCR text.
     """
 
-    overlay_document(output, source, text, page)
+    # Parse the HOCR text.
+    page = parse(text)[0]
 
+    # Initialize PDF document.
+    with Document(output) as document:
 
-# >>> overlay(output='pass.pdf', source='media/document.tiff', text='')
-# >>> overlay(output='out.pdf',  source='media/document.tiff', text='')
+        # Initialize a new page and begin its context.
+        with document.Page() as ctx:
+
+            # Prepare to embed the target as the background of the
+            # new PDF.
+            if _is_document(source):
+                with Document(source, 'r') as target:
+
+                    # Set the box to be equivalent as the source.
+                    target_page = target[index]
+                    ctx.box = target_page.box
+
+                    # Embed the target.
+                    ctx.embed(target_page)
+
+            else:
+                # Assume we have an image to embed. This will do
+                # hilarious things if we "dont" have an image as
+                # image magick.. is magick.
+                with Image(source, index=index) as target:
+
+                    # Set the box to be equivalent as the source.
+                    taget_page = target.pages[index]
+                    ctx.box = target_page.box
+
+                    # Embed the target.
+                    ctx.embed(target)
