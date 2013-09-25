@@ -3,7 +3,7 @@ import hummus
 from .parser import parse
 
 
-def overlay_document(output, source, text):
+def overlay_document(output, source, text, page=0):
     """Overlay a PDF document with the text from a HOCR file.
 
     Writes the overlaid document as a PDF file to the output filename or
@@ -13,16 +13,32 @@ def overlay_document(output, source, text):
         Either a file-like object or a filename of the PDF document.
     """
 
+    # Parse the HOCR text.
+    target = parse(text)[0]
+    # print(target.bbox.right, target.bbox.bottom)
+
+    # Prepare fonts.
+    arial = hummus.Font('arial')
+
+    # Initialize PDF document.
     with hummus.Document(output) as document:
 
-        with document.Page() as page:
+        # Initialize a new page and begin its context.
+        with document.Page() as ctx:
 
-            page.add(hummus.Document(source, 'r')[0])
+            # Establish the media box.
+            # ctx.media_box = hummus.Rectangle(
+            #     right=target.bbox.right, bottom=target.bbox.bottom)
 
-            page.add(hummus.Text(text, font, size, x, y))
+            # Embed the passed PDF document.
+            ctx.embed_document(source, page=page)
+
+            ctx.write_text('Tom Foolery', font=arial, size=10,
+                           a=1, b=1, c=1, d=1)
 
 
-def overlay_image(output, source, text):
+
+def overlay_image(output, source, text, page=0):
     """Overlay a JPEG image with the text from a HOCR file.
 
     Writes the overlaid image as a PDF file to the output filename or
@@ -33,7 +49,7 @@ def overlay_image(output, source, text):
     """
 
 
-def overlay(output, source, text):
+def overlay(output, source, text, page=0):
     """Overlay a PDF document or JPEG image with the text from a HOCR file.
 
     Writes the overlaid source as a PDF file to the output filename or
@@ -43,7 +59,7 @@ def overlay(output, source, text):
         Either a file-like object or a filename of the HOCR text.
     """
 
-    overlay_document(output, source, text)
+    overlay_document(output, source, text, page)
 
 
 # >>> overlay(output='pass.pdf', source='media/document.tiff', text='')
