@@ -25,6 +25,9 @@ setup(
     ],
     package_dir={'hocr': 'src/hocr'},
     packages=find_packages('src'),
+    entry_points={
+        'console_scripts': ['hocr2pdf = hocr.commands:hocr2pdf']
+    },
     install_requires=[
         'six',
         'lxml >= 3.2.3, < 4.0.0',
