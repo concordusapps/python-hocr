@@ -1,6 +1,5 @@
 import hocr
 from os import path
-from io import StringIO
 from pytest import raises
 
 BASE_DIR = path.dirname(__file__)

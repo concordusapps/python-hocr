@@ -1,4 +1,3 @@
-from lxml.etree import ElementTree
 from lxml import etree
 from .page import Page
 
