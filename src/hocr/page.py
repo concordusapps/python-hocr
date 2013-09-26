@@ -1,6 +1,6 @@
 
 
-class BoundingBox:
+class Box:
 
     def __init__(self, text=None, *, left=0, right=0, top=0, bottom=0):
 
@@ -12,6 +12,18 @@ class BoundingBox:
         self.right = right
         self.top = top
         self.bottom = bottom
+
+    @property
+    def width(self):
+        return self.right - self.left
+
+    @property
+    def height(self):
+        return self.bottom - self.top
+
+    def __repr__(self):
+        return '<Box(%r, %r, %r, %r)>' % (
+            self.left, self.top, self.right, self.bottom)
 
 
 class Base:
@@ -35,7 +47,7 @@ class Base:
         for prop in properties:
             name, value = prop.split(maxsplit=1)
             if name == 'bbox':
-                self.bbox = BoundingBox(value)
+                self.box = Box(value)
 
             elif name == 'image':
                 self.image = value.strip('" ')
@@ -76,9 +88,17 @@ class Word(Base):
         self.italic = bool(element.xpath('.//*[local-name() = "em"]'))
 
         # Find the text node.
-        node = element.xpath('.//*[text()]')
-        if node:
-            self.text = node[0].text
+        self.text = element.text.strip() if element.text else None
+        if not self.text:
+            self.text = None
+            node = element.xpath('.//*[text()]')
+            if node:
+                self.text = node[0].text.strip()
+                if not self.text:
+                    self.text = None
+
+    def __str__(self):
+        return '<Word(%r, %r)>' % (self.text, self.box)
 
 
 class Line(Base):

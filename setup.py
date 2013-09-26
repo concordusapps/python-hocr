@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 from pkgutil import get_importer
@@ -29,7 +29,8 @@ setup(
         'six',
         'lxml >= 3.2.3, < 4.0.0',
         'hummus >= 0.2.0',
-        'python-magic'
+        'python-magic',
+        'pillow'
     ],
     extras_require={
         'test': [

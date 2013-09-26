@@ -57,16 +57,16 @@ def test_page_has_proper_attribute_error():
 
 def test_page_has_bounding_box():
     for page in parse():
-        assert page.bbox.left >= 0
+        assert page.box.left >= 0
 
 
 def test_page_bounding_box_has_correct_value():
     page = parse()[0]
 
-    assert page.bbox.left == 0
-    assert page.bbox.top == 0
-    assert page.bbox.right == 5100
-    assert page.bbox.bottom == 6600
+    assert page.box.left == 0
+    assert page.box.top == 0
+    assert page.box.right == 5100
+    assert page.box.bottom == 6600
 
 
 def test_page_has_image_name():
@@ -138,7 +138,7 @@ def test_words_have_italicness():
 def test_words_have_bounding_box():
     page = parse()[0]
 
-    assert page.words[0].bbox.left == 2216
-    assert page.words[0].bbox.top == 1049
-    assert page.words[0].bbox.right == 2449
-    assert page.words[0].bbox.bottom == 1098
+    assert page.words[0].box.left == 2216
+    assert page.words[0].box.top == 1049
+    assert page.words[0].box.right == 2449
+    assert page.words[0].box.bottom == 1098

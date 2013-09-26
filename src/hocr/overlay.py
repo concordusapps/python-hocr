@@ -2,6 +2,7 @@
 import six
 from hummus import Document, Font, Text, Image
 from .parser import parse
+from PIL import ImageFont
 import magic
 
 
@@ -20,7 +21,7 @@ def _is_document(source):
     return test(source, mime=True) == b'application/pdf'
 
 
-def overlay(output, source, text, index=0):
+def overlay(output, source, text, index=0, font='TimesNewRoman', dpi=72.0):
     """Overlay a PDF document or JPEG image with the text from a HOCR file.
 
     Writes the overlaid source as a PDF file to the output filename or
@@ -62,8 +63,52 @@ def overlay(output, source, text, index=0):
                 with Image(source, index=index) as target:
 
                     # Set the box to be equivalent as the source.
-                    taget_page = target.pages[index]
-                    ctx.box = target_page.box
+                    ctx.box = target.box
 
                     # Embed the target.
                     ctx.embed(target)
+
+            # Figure out scale.
+            scale = ctx.box.right / page.box.right
+            if scale != (ctx.box.bottom / page.box.bottom):
+                raise RuntimeError(
+                    'Aspect ratio is different between the '
+                    'source and the HOCR.')
+
+            # Iterate through words in the HOCR page.
+            for word in page.words:
+
+                # Skip if we don't have text.
+                if word.text is None:
+                    continue
+
+                # Get x,y position where text should begin.
+                x, y = word.box.left, word.box.top
+
+                # Apply the scale factor.
+                x *= scale
+                y *= scale
+
+                # Mirror the Y axis as HOCR and PDF are in differnet
+                # quadrants because.
+                y = ctx.box.bottom - y
+
+                # Build a font object.
+                font_obj = Font(font, bold=word.bold, italic=word.italic)
+
+                # Approximate the font size by measuring the width of
+                # the text using pillow.
+                pil_font = ImageFont.truetype(font_obj.file, 10)
+                base_width, _ = pil_font.getsize(word.text)
+                base_width /= dpi
+                expected_width = (word.box.width * scale) / dpi
+                scale_width = expected_width / base_width
+                font_size = 10 * scale_width
+
+                # Measure the font again and shift it down.
+                pil_font = ImageFont.truetype(font_obj.file, int(font_size))
+                _, actual_height = pil_font.getsize(word.text)
+                y -= actual_height
+
+                # Write text.
+                ctx.add(Text(word.text, font_obj, size=font_size, x=x, y=y, mode=7))
