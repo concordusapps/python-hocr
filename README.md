@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/concordusapps/python-hocr/badge.png?branch=master)](https://coveralls.io/r/concordusapps/python-hocr?branch=master)
 [![PyPi Version](https://pypip.in/v/hocr/badge.png)](https://pypi.python.org/pypi/hocr)
 ![PyPi Downloads](https://pypip.in/d/hocr/badge.png)
-> HOCR parsing and merging library in python.
+> HOCR manipulation and utility library; provides hocr2pdf binary.
 
 ## License
 
