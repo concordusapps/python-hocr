@@ -70,10 +70,6 @@ def overlay(output, source, text, index=0, font='TimesNewRoman', dpi=72.0):
 
             # Figure out scale.
             scale = ctx.box.right / page.box.right
-            if scale != (ctx.box.bottom / page.box.bottom):
-                raise RuntimeError(
-                    'Aspect ratio is different between the '
-                    'source and the HOCR.')
 
             # Iterate through words in the HOCR page.
             for word in page.words:
