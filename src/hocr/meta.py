@@ -1,2 +1,2 @@
 version = '0.1.0'
-description = 'HOCR parsing and merging library in python.'
+description = 'HOCR manipulation and utility library; provides hocr2pdf binary.'
