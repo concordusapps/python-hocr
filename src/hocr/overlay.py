@@ -13,10 +13,6 @@ def _is_document(source):
     test = magic.from_buffer
     if isinstance(source, six.string_types):
         test = magic.from_file
-        source = source.encode('utf8')
-
-    elif isinstance(source, six.binary_type):
-        test = magic.from_file
 
     return test(source, mime=True) == b'application/pdf'
 
