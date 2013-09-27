@@ -11,7 +11,7 @@ def _is_document(source):
     """
 
     test = magic.from_buffer
-    if isinstance(source, (str, bytes)):
+    if isinstance(source, six.string_types):
         test = magic.from_file
 
     return test(source, mime=True) == b'application/pdf'
