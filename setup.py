@@ -32,7 +32,7 @@ setup(
         'six',
         'lxml >= 3.2.3, < 4.0.0',
         'hummus >= 0.2.0',
-        'python-magic == 0.4.5',
+        'filemagic',
         'pillow'
     ],
     extras_require={
