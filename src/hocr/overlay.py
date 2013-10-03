@@ -11,7 +11,7 @@ def _is_document(source):
     """
     test = 'id_filename' if isinstance(source, str) else 'id_buffer'
     with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:
-        return getattr(m, test)(source) == b'application/pdf'
+        return getattr(m, test)(source) == 'application/pdf'
 
 
 def overlay(output, source, text, index=0, font='TimesNewRoman', dpi=72.0):
