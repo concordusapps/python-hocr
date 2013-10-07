@@ -1,3 +1,4 @@
+import re
 
 
 class Box:
@@ -43,7 +44,7 @@ class Base:
         self._cache = {}
 
         # Parse the properties of the HOCR element.
-        properties = element.attrib.get('title', '').split(';')
+        properties = element.get('title', '').split(';')
         for prop in properties:
             name, value = prop.split(maxsplit=1)
             if name == 'bbox':
@@ -63,7 +64,7 @@ class Base:
         # Parse the named OCR elements.
         if name in self._allowed_ocr_classes:
             ref = OCR_CLASSES[name]
-            nodes = self._element.findall('.//*[@class="%s"]' % ref['name'])
+            nodes = self._element.find_all(class_=re.compile(ref['name']))
             self._cache[name] = elements = list(map(ref['class'], nodes))
             return elements
 
@@ -81,21 +82,14 @@ class Word(Base):
 
         # Discover if we are "bold".
         # A word element is bold if its text node is wrapped in a <strong/>.
-        self.bold = bool(element.xpath('.//*[local-name() = "strong"]'))
+        self.bold = bool(element.find('strong'))
 
         # Discover if we are "italic".
         # A word element is italic if its text node is wrapped in a <em/>.
-        self.italic = bool(element.xpath('.//*[local-name() = "em"]'))
+        self.italic = bool(element.find('em'))
 
         # Find the text node.
-        self.text = element.text.strip() if element.text else None
-        if not self.text:
-            self.text = None
-            node = element.xpath('.//*[text()]')
-            if node:
-                self.text = node[0].text.strip()
-                if not self.text:
-                    self.text = None
+        self.text = element.text
 
     def __str__(self):
         return '<Word(%r, %r)>' % (self.text, self.box)
@@ -118,7 +112,7 @@ class Page(Base):
 
 
 OCR_CLASSES = {
-    'words': {'name': 'ocrx_word', 'class': Word},
+    'words': {'name': 'ocr.?_word', 'class': Word},
     'lines': {'name': 'ocr_line', 'class': Line},
     'paragraphs': {'name': 'ocr_par', 'class': Paragraph},
     'blocks': {'name': 'ocr_carea', 'class': Block}

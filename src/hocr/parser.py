@@ -1,7 +1,7 @@
-from lxml import etree, html
 from .page import Page
 import six
-from bs4 import UnicodeDammit
+from bs4 import UnicodeDammit, BeautifulSoup
+# from lxml.etree import fromstring
 
 
 def parse(source):
@@ -20,8 +20,8 @@ def parse(source):
         content = source.read()
 
     # Parse the HOCR xml stream.
-    ud = UnicodeDammit(content, is_html=False)
-    root = etree.fromstring(ud.unicode_markup.encode('utf8'))
+    ud = UnicodeDammit(content, is_html=True)
+    soup = BeautifulSoup(ud.unicode_markup)
 
     # Get all the pages and parse them into page elements.
-    return [Page(x) for x in root.findall('.//*[@class="ocr_page"]')]
+    return [Page(x) for x in soup.find_all(class_='ocr_page')]
