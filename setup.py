@@ -28,9 +28,15 @@ setup(
     entry_points={
         'console_scripts': ['hocr2pdf = hocr.commands:hocr2pdf']
     },
+    dependency_links=[
+        'bzr+lp:beautifulsoup#egg=beautifulsoup-4.0',
+        'git+git://github.com/bsidhom/python3-chardet.git@master#egg=chardet-dev',
+    ],
     install_requires=[
         'six',
         'lxml >= 3.2.3, < 4.0.0',
+        'chardet == dev',
+        'beautifulsoup == 4.0',
         'hummus >= 0.2.0',
         'filemagic',
         'pillow'
