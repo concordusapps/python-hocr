@@ -68,7 +68,8 @@ def overlay(output, source, text, index=0, font='TimesNewRoman', dpi=72.0):
             for word in page.words:
 
                 # Skip if we don't have text.
-                if word.text is None:
+                text = word.text.strip()
+                if not text:
                     continue
 
                 # Get x,y position where text should begin.
@@ -88,7 +89,7 @@ def overlay(output, source, text, index=0, font='TimesNewRoman', dpi=72.0):
                 # Approximate the font size by measuring the width of
                 # the text using pillow.
                 pil_font = ImageFont.truetype(fobj.file, 10)
-                base_width, _ = pil_font.getsize(word.text)
+                base_width, _ = pil_font.getsize(text)
                 base_width /= dpi
                 expected_width = (word.box.width * scale) / dpi
                 scale_width = expected_width / base_width
@@ -96,8 +97,8 @@ def overlay(output, source, text, index=0, font='TimesNewRoman', dpi=72.0):
 
                 # Measure the font again and shift it down.
                 pil_font = ImageFont.truetype(fobj.file, int(fsize))
-                _, actual_height = pil_font.getsize(word.text)
+                _, actual_height = pil_font.getsize(text)
                 y -= actual_height
 
                 # Write text.
-                ctx.add(Text(word.text, fobj, size=fsize, x=x, y=y, mode=7))
+                ctx.add(Text(text, fobj, size=fsize, x=x, y=y, mode=7))
