@@ -206,5 +206,5 @@ def overlay(output, source, text, index=0, font='TimesNewRoman', dpi=72.0):
                 y -= actual_height
 
                 # Write text.
-                print(text, x, y)
+                # print(text, x, y)
                 ctx.add(Text(text, fobj, size=fsize, x=x, y=y, mode=7))
