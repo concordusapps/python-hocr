@@ -21,7 +21,7 @@ def parse(source):
 
     # Parse the HOCR xml stream.
     ud = UnicodeDammit(content, is_html=True)
-    soup = BeautifulSoup(ud.unicode_markup)
+    soup = BeautifulSoup(ud.unicode_markup, 'lxml')
 
     # Get all the pages and parse them into page elements.
     return [Page(x) for x in soup.find_all(class_='ocr_page')]
